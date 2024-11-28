@@ -31,14 +31,6 @@ function appendDesktop(client) {
  */
 function onDesktopChangedFor(client) {
   trace(`onDesktopChangedFor(${client.caption})`);
-
-  appendDesktop(client);
-}
-
-/**
- * When creating new windows, check whether they are occupying the last desktop
- */
-function onClientAdded(client) {
   if (client === null) {
     log("onClientAdded(null) - that may happen rarely");
     return;
@@ -50,13 +42,7 @@ function onClientAdded(client) {
     return;
   }
 
-  // add a new desktop for a client too right
   appendDesktop(client);
-
-  // subscribe the client to create desktops when desktop switched
-  client.desktopsChanged.connect(() => {
-    onDesktopChangedFor(client);
-  });
 }
 
 // tells if desktop has no windows of its own
@@ -78,14 +64,14 @@ function isEmptyDesktop(desktop, number) {
   return result;
 }
 
-function removeAllEmptyDesktops() {
+function removalHandler() {
   const allDesktops = workspace.desktops;
   const desktopsLength = workspace.desktops.length;
   const currentDesktopIndex = allDesktops.indexOf(workspace.currentDesktop);
 
   let _toRemove = [];
   if (MIN_DESKTOPS >= desktopsLength) return;
-  for (let dIdx = 0; dIdx < desktopsLength - 1; dIdx++) {
+  for (let dIdx = 0; dIdx < desktopsLength; dIdx++) {
     if (dIdx !== currentDesktopIndex) {
       const _desktop = workspace.desktops[dIdx];
       if (isEmptyDesktop(_desktop, dIdx)) {
@@ -102,13 +88,24 @@ function removeAllEmptyDesktops() {
   }
 }
 
+function redrawDesktops() {
+  removalHandler();
+  workspace.windowList().forEach(onDesktopChangedFor);
+}
+
+function onWindowAdded(client) {
+  onDesktopChangedFor(client);
+  client.desktopsChanged.connect(redrawDesktops);
+}
+
 // Adding or removing a client might create desktops.
 // For all existing clients:
-workspace.windowList().forEach(onClientAdded);
+workspace.windowList().forEach(onWindowAdded);
 // And for all future clients:
-workspace.windowAdded.connect(onClientAdded);
+workspace.windowAdded.connect(onWindowAdded);
+workspace.windowRemoved.connect(redrawDesktops);
 
 // Switching desktops might remove desktops
-workspace.currentDesktopChanged.connect(removeAllEmptyDesktops);
+workspace.currentDesktopChanged.connect(redrawDesktops);
 
-removeAllEmptyDesktops();
+redrawDesktops();
