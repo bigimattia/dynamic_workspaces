@@ -1,10 +1,3 @@
-// This scripts relies on two things:
-// 1. `workspace.desktops` and `client.desktops` giving me desktops in the same
-//   order as in pager and all context menus
-// 2. Desktops being comparable for equality with `==` operator
-
-// Desktop numbers are from zero (unlike how it worked in plasma 5)
-
 const MIN_DESKTOPS = 2;
 const LOG_LEVEL = 2; // 0 trace, 1 debug, 2 info
 
@@ -18,9 +11,19 @@ function trace(...args) {
   if (LOG_LEVEL <= 0) log(...args);
 }
 
-function appendDesktop(client) {
+function createDesktopForClient(client) {
   const lastDesktop = workspace.desktops[workspace.desktops.length - 1];
   if (client.desktops.indexOf(lastDesktop) !== -1) {
+    workspace.createDesktop(workspace.desktops.length, undefined);
+  }
+}
+
+function createLastDesktop() {
+  const lastDesktop = workspace.desktops[workspace.desktops.length - 1];
+  const client = workspace
+    .windowList()
+    .find((client) => client.desktops.indexOf(lastDesktop) !== -1);
+  if (client) {
     workspace.createDesktop(workspace.desktops.length, undefined);
   }
 }
@@ -42,60 +45,44 @@ function onDesktopChangedFor(client) {
     return;
   }
 
-  appendDesktop(client);
+  createDesktopForClient(client);
 }
 
 // tells if desktop has no windows of its own
-function isEmptyDesktop(desktop, number) {
-  trace(`isEmptyDesktop(${number})`);
+function isEmptyDesktop(desktop) {
   const cls = workspace.windowList();
-  let result = true;
-  for (client of cls) {
-    if (
+  const found = cls.find(
+    (client) =>
       client.desktops.indexOf(desktop) !== -1 &&
       !client.skipPager && // ignore hidden windows
-      !client.onAllDesktops // ignore windows on all desktops
-    ) {
-      debug(`Desktop ${number} not empty because ${client.caption} is there`);
-      result = false;
-      break;
-    }
-  }
-  return result;
+      !client.onAllDesktops
+  );
+  return !found;
 }
 
+/**
+ *  TODO
+ *  Simplify logic in order to properly render animations
+ * @returns
+ */
 function removalHandler() {
-  const allDesktops = workspace.desktops;
   const desktopsLength = workspace.desktops.length;
-  const currentDesktopIndex = allDesktops.indexOf(workspace.currentDesktop);
-
-  let _toRemove = [];
   if (MIN_DESKTOPS >= desktopsLength) return;
-  for (let dIdx = 0; dIdx < desktopsLength; dIdx++) {
-    if (dIdx !== currentDesktopIndex) {
-      const _desktop = workspace.desktops[dIdx];
-      if (isEmptyDesktop(_desktop, dIdx)) {
-        /**
-         * we collect all empty desktops indexes
-         */
-        _toRemove.push(_desktop);
-      }
-    }
-  }
-  for (let rIdx = 0; rIdx < _toRemove.length; rIdx++) {
+  for (let desktop of workspace.desktops) {
     if (MIN_DESKTOPS >= workspace.desktops.length) break;
-    workspace.removeDesktop(_toRemove[rIdx]);
+    if (desktop != workspace.currentDesktop && isEmptyDesktop(desktop))
+      workspace.removeDesktop(desktop);
   }
 }
 
 function redrawDesktops() {
   removalHandler();
-  workspace.windowList().forEach(onDesktopChangedFor);
+  createLastDesktop();
 }
 
 function onWindowAdded(client) {
   onDesktopChangedFor(client);
-  client.desktopsChanged.connect(redrawDesktops);
+  client.desktopsChanged.connect(createLastDesktop);
 }
 
 // Adding or removing a client might create desktops.
@@ -103,9 +90,11 @@ function onWindowAdded(client) {
 workspace.windowList().forEach(onWindowAdded);
 // And for all future clients:
 workspace.windowAdded.connect(onWindowAdded);
-workspace.windowRemoved.connect(redrawDesktops);
+//workspace.windowRemoved.connect(redrawDesktops);
 
 // Switching desktops might remove desktops
 workspace.currentDesktopChanged.connect(redrawDesktops);
-
+// worksapce.desktopChanging.connect(redrawDesktops);
+// workspace.desktopAdded.connect(redrawDesktops);
+// worksapce.desktopRemoved.connect(redrawDesktops);
 redrawDesktops();
