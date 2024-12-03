@@ -1,16 +1,11 @@
+/**
+ * Minimum number of desktops to maintain.
+ */
 const MIN_DESKTOPS = 2;
-const LOG_LEVEL = 2; // 0 trace, 1 debug, 2 info
 
-function log(...args) {
-  print("[dynamic_workspaces] ", ...args);
-}
-function debug(...args) {
-  if (LOG_LEVEL <= 1) log(...args);
-}
-function trace(...args) {
-  if (LOG_LEVEL <= 0) log(...args);
-}
-
+/**
+ * Creates a new desktop after the given client if necessary.
+ */
 function createDesktopForClient(client) {
   const lastDesktop = workspace.desktops[workspace.desktops.length - 1];
   if (client.desktops.indexOf(lastDesktop) !== -1) {
@@ -18,6 +13,9 @@ function createDesktopForClient(client) {
   }
 }
 
+/**
+ * Creates a new desktop at the end if the last desktop is occupied.
+ */
 function createLastDesktop() {
   const lastDesktop = workspace.desktops[workspace.desktops.length - 1];
   const client = workspace
@@ -29,26 +27,19 @@ function createLastDesktop() {
 }
 
 /**
- * Checks for new created or moved windows if they are occupying the last desktop
- * -> if yes, create new one to the right
+ * Checks if a new window or a moved window is on the last desktop.
+ * If so, a new desktop is created for that window.
  */
 function onDesktopChangedFor(client) {
-  trace(`onDesktopChangedFor(${client.caption})`);
-  if (client === null) {
-    log("onClientAdded(null) - that may happen rarely");
+  if (client === null || client.skipPager) {
     return;
   }
-  trace(`onClientAdded(${client.caption})`);
-
-  if (client.skipPager) {
-    debug("Ignoring added hidden window");
-    return;
-  }
-
   createDesktopForClient(client);
 }
 
-// tells if desktop has no windows of its own
+/**
+ * Checks if a desktop is empty.
+ */
 function isEmptyDesktop(desktop) {
   const cls = workspace.windowList();
   const found = cls.find(
@@ -62,16 +53,14 @@ function isEmptyDesktop(desktop) {
 }
 
 /**
- *  TODO
- *  Simplify logic in order to properly render animations
- * @returns
+ * Removes empty desktops, ensuring a minimum number of desktops.
+ * Current and last desktops are excluded as well in order to properly render
+ * kwin animations between workspace switch
  */
 function removalHandler() {
   const allDesktops = workspace.desktops;
   const desktopsLength = workspace.desktops.length;
   const currentDesktopIndex = allDesktops.indexOf(workspace.currentDesktop);
-  console.log("dynamic_workspaces   cDesktop", currentDesktopIndex);
-
   if (MIN_DESKTOPS >= desktopsLength) return;
   for (const [index, desktop] of workspace.desktops.entries()) {
     if (MIN_DESKTOPS >= workspace.desktops.length) break;
@@ -80,6 +69,10 @@ function removalHandler() {
   }
 }
 
+/**
+ * Redraws the desktops by removing empty ones and creating a new one at the
+ * end if necessary.
+ */
 function redrawDesktops() {
   removalHandler();
   createLastDesktop();
