@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="32"
+   height="32"
+   viewBox="0 0 32 32"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
+   sodipodi:docname="logo.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     showgrid="true"
+     inkscape:zoom="18.34375"
+     inkscape:cx="16.354344"
+     inkscape:cy="15.182283"
+     inkscape:window-width="1536"
+     inkscape:window-height="796"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <inkscape:grid
+       id="grid1"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="1"
+       spacingy="1"
+       empcolor="#0099e5"
+       empopacity="0.30196078"
+       color="#0099e5"
+       opacity="0.14901961"
+       empspacing="5"
+       enabled="true"
+       visible="true" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1">
+    <linearGradient
+       id="linearGradient2"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#005f07;stop-opacity:1;"
+         offset="0"
+         id="stop2" />
+      <stop
+         style="stop-color:#00a267;stop-opacity:1;"
+         offset="1"
+         id="stop3" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2"
+       id="linearGradient3"
+       x1="26.433704"
+       y1="-11.693514"
+       x2="29.124083"
+       y2="26.780708"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2"
+       id="linearGradient4"
+       gradientUnits="userSpaceOnUse"
+       x1="26.433704"
+       y1="-11.693514"
+       x2="29.124083"
+       y2="26.780708"
+       gradientTransform="translate(4.1039712,2.2863774)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2"
+       id="linearGradient5"
+       gradientUnits="userSpaceOnUse"
+       x1="26.433704"
+       y1="-11.693514"
+       x2="29.124083"
+       y2="26.780708"
+       gradientTransform="matrix(0.89499221,0,0,0.89499222,1.022206,1.1122939)" />
+  </defs>
+  <g
+     inkscape:label="Livello 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       sodipodi:type="spiral"
+       style="fill:none;fill-rule:evenodd;stroke:#000000"
+       id="path1"
+       sodipodi:cx="15.809199"
+       sodipodi:cy="14.555367"
+       sodipodi:expansion="1"
+       sodipodi:revolution="2"
+       sodipodi:radius="18.996086"
+       sodipodi:argument="-21.2626"
+       sodipodi:t0="0"
+       d="m 15.809199,14.555367 c -1.065975,-0.951177 0.756254,-1.90619 1.58092,-1.771721 2.234793,0.364405 2.750442,3.170987 1.962522,4.93356 -1.409402,3.152829 -5.501518,3.745672 -8.2862,2.153324 C 6.9798084,17.533697 6.2982187,12.007652 8.7223153,8.23169 11.953255,3.1989267 18.957395,2.4294064 23.713796,5.6967624 29.699242,9.8083966 30.556069,18.309185 26.439525,24.040884 21.45384,30.982739 11.446869,31.926572 4.7427637,26.957414 -3.1577928,21.101434 -4.1884918,9.5827235 1.6354313,1.9080125"
+       transform="translate(2.5452284,-0.09502883)" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Livello 2">
+    <g
+       id="g2"
+       transform="translate(-8.5587734,6.923339)"
+       style="fill:url(#linearGradient3)">
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.77329px;font-family:FreeSans;-inkscape-font-specification:FreeSans;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:url(#linearGradient5);stroke-width:0.894992"
+         x="9.4628839"
+         y="12.041261"
+         id="text2"
+         transform="scale(0.93241632,1.0724823)"><tspan
+           sodipodi:role="line"
+           id="tspan2"
+           x="9.4628839"
+           y="12.041261"
+           style="fill:url(#linearGradient5);stroke-width:0.894992">WORKSPACES</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.33333px;font-family:FreeSans;-inkscape-font-specification:FreeSans;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:url(#linearGradient4)"
+         x="12.172114"
+         y="8.9916582"
+         id="text1"><tspan
+           sodipodi:role="line"
+           id="tspan1"
+           x="12.172114"
+           y="8.9916582"
+           style="fill:url(#linearGradient4)">DYNAMIC</tspan></text>
+    </g>
+  </g>
+</svg>
