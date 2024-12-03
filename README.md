@@ -1,7 +1,7 @@
 # Dynamic Workspaces
 
 A kwin script that creates and deletes desktops.
-This is a fork of the lovely (dynamic_workspaces)[https://github.com/maurges/dynamic_workspaces] repo.
+This is a fork of the lovely [dynamic_workspaces](https://github.com/maurges/dynamic_workspaces) repo.
 
 It's intended to work with Plasma 6.x only and to handle empty desktops in the mid as well.
 
