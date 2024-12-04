@@ -4,37 +4,25 @@
 const MIN_DESKTOPS = 2;
 
 /**
- * Creates a new desktop after the given client if necessary.
- */
-function createDesktopForClient(client) {
-  const lastDesktop = workspace.desktops[workspace.desktops.length - 1];
-  if (client.desktops.indexOf(lastDesktop) !== -1) {
-    workspace.createDesktop(workspace.desktops.length, undefined);
-  }
-}
-
-/**
  * Creates a new desktop at the end if the last desktop is occupied.
  */
-function createLastDesktop() {
+function addDesktop(window) {
   const lastDesktop = workspace.desktops[workspace.desktops.length - 1];
-  const client = workspace
-    .windowList()
-    .find((client) => client.desktops.indexOf(lastDesktop) !== -1);
-  if (client) {
-    workspace.createDesktop(workspace.desktops.length, undefined);
+  if (!window) {
+    window = workspace
+      .windowList()
+      .find((w) => w.desktops.indexOf(lastDesktop) !== -1);
+    if (window) {
+      workspace.createDesktop(workspace.desktops.length, undefined);
+    }
+  } else {
+    if (window === null || window.skipPager) {
+      return;
+    }
+    if (window.desktops.indexOf(lastDesktop) !== -1) {
+      workspace.createDesktop(workspace.desktops.length, undefined);
+    }
   }
-}
-
-/**
- * Checks if a new window or a moved window is on the last desktop.
- * If so, a new desktop is created for that window.
- */
-function onDesktopChangedFor(client) {
-  if (client === null || client.skipPager) {
-    return;
-  }
-  createDesktopForClient(client);
 }
 
 /**
@@ -58,14 +46,22 @@ function isEmptyDesktop(desktop) {
  * kwin animations between workspace switch
  */
 function removalHandler() {
-  const allDesktops = workspace.desktops;
   const desktopsLength = workspace.desktops.length;
-  const currentDesktopIndex = allDesktops.indexOf(workspace.currentDesktop);
+  const lastDesktop = workspace.desktops[workspace.desktops.length - 1];
   if (MIN_DESKTOPS >= desktopsLength) return;
-  for (const [index, desktop] of workspace.desktops.entries()) {
+  for (const desktop of workspace.desktops) {
     if (MIN_DESKTOPS >= workspace.desktops.length) break;
-    if (index !== currentDesktopIndex && isEmptyDesktop(desktop) && index < (desktopsLength - 1))
+    if (
+      isEmptyDesktop(desktop) &&
+      JSON.stringify(lastDesktop) !== JSON.stringify(desktop)
+    )
       workspace.removeDesktop(desktop);
+  }
+}
+
+function removeAllEmptyDesktops() {
+  for (const desktop of workspace.desktops) {
+    if (isEmptyDesktop(desktop)) workspace.removeDesktop(desktop);
   }
 }
 
@@ -75,24 +71,28 @@ function removalHandler() {
  */
 function redrawDesktops() {
   removalHandler();
-  createLastDesktop();
+  addDesktop();
 }
 
-function onWindowAdded(client) {
-  onDesktopChangedFor(client);
-  client.desktopsChanged.connect(createLastDesktop);
-}
 
-// Adding or removing a client might create desktops.
-// For all existing clients:
-workspace.windowList().forEach(onWindowAdded);
-// And for all future clients:
-workspace.windowAdded.connect(onWindowAdded);
-//workspace.windowRemoved.connect(redrawDesktops);
-
-// Switching desktops might remove desktops
+/**
+ * SIGNALS
+ */
+workspace.windowAdded.connect((window) => {
+  addDesktop(window);
+  window.desktopsChanged.connect(() => addDesktop());
+});
 workspace.currentDesktopChanged.connect(redrawDesktops);
-// worksapce.desktopChanging.connect(redrawDesktops);
-// workspace.desktopAdded.connect(redrawDesktops);
-// worksapce.desktopRemoved.connect(redrawDesktops);
-redrawDesktops();
+
+/**
+ * MAIN
+ */
+workspace
+  .windowList()
+  .forEach((window) => {
+    window.desktopsChanged.connect(() => addDesktop()); // bind to existing windows
+  });
+// remove all + add desktop at the end
+removeAllEmptyDesktops();
+workspace.createDesktop(workspace.desktops.length, undefined);
+
